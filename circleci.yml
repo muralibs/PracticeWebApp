@@ -1,0 +1,4 @@
+#skipping the tests for now
+test:
+  override:
+    - "true"

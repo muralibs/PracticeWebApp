@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Practice Maven Web app</title>
+
+<script type="text/javascript">
+	var wsUrl = "ws://" + window.location.host + "/PracticeWebApp/echo";
+	var output;
+	
+	function init() {
+		output = document.getElementById("txtAreaLog");
+		testWebSocket();
+	}
+	
+	function testWebSocket() {
+		webSocket = new WebSocket(wsUrl);
+		webSocket.onopen = function(evt) { 	onOpen(evt); 	};
+		webSocket.onmessage = function(evt) { 	onMessage(evt); 	};
+		webSocket.onerror = function(evt) { 	onError(evt); 	};
+		webSocket.onclose = function(evt) { 	onClose(evt); 	};
+	}
+	
+	function onOpen(evt) {
+		writeToScreen("CONNECTED TO SERVER");
+	}
+	
+	function onMessage(evt) {
+		writeToScreen(evt.data)
+	}
+	function onError(evt) {
+		writeToScreen("Error encountered: " + evt.data)
+	}
+	
+	function onClose(evt) {
+		//writeToScreen(evt.data)
+	}
+	
+	function disconnect() {
+		webSocket.close();
+		writeToScreen("DISCONNECTED FROM SERVER.");
+	}
+	
+
+	function writeToScreen(message) { 
+		var pre = document.getElementById("txtAreaLog"); //pre.style.wordWrap = "break-word"; 
+		pre.value += message +"\n";
+		//pre.innerHTML = message; output.appendChild(pre); 
+	} 
+	
+	function sendMessage() {
+		var message = document.getElementById("txtMessage");
+		webSocket.send(message.value);
+		message = "";
+	}
+	
+	window.addEventListener("load", init, false);
+
+</script>
+</head>
+<body>
+<h2>WebSocket Practice</h2>
+
+<button id="connect" onclick="init()">Connect</button>
+<button id="disconnect" onclick="disconnect()">Disconnect</button>
+<br/>
+<input type="text"  id="txtMessage" >
+<button id="echo" onclick="sendMessage()">Echo</button>
+
+<hr/><br/>
+<textarea rows="20" cols="75" id="txtAreaLog"></textarea>
+
+<div id="output"></div>
+</body>
+</html>
